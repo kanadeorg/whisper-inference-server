@@ -1,0 +1,4 @@
+venv
+*.pt
+tiktoken-cache/*
+*.tar

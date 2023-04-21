@@ -1,0 +1,31 @@
+version: '3.3'
+
+networks:
+  nointernet-voice-to-text-infer:
+    internal: true
+  internet-voice-to-text-infer: {}
+
+
+services:
+  voice-to-text-inference:
+    image: voice-to-text-infer
+    restart: unless-stopped
+    runtime: nvidia
+    # shm_size: '50G'
+    networks:
+      - nointernet-voice-to-text-infer
+    ports:
+      - 5005:5000
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=2
+      - TIKTOKEN_CACHE_DIR=tiktoken-cache/
+  reverse-proxy:
+    restart: unless-stopped
+    image: nginx
+    networks:
+      - nointernet-voice-to-text-infer
+      - internet-voice-to-text-infer
+    ports:
+      - 5005:80
+    volumes:
+      - ./config/default.conf:/etc/nginx/conf.d/default.conf

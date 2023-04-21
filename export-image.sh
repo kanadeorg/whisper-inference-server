@@ -1,0 +1,1 @@
+docker save --output voice-to-text-infer.tar voice-to-text-infer
